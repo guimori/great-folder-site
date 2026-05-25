@@ -5,27 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Great Folder</title>
   <meta name="description" content="Organize arquivos e pastas no Windows com poucos cliques.">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/x-icon" href="assets/great-folder-folder-blue.ico">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
+  <script src="site-config.js"></script>
+  <script src="script.js" defer></script>
 </head>
 <body>
   <header class="hero" id="topo">
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <p class="eyebrow">Organização automática para Windows</p>
-      <h1>Great Folder</h1>
-      <p class="hero-copy">
+      <p class="eyebrow" data-i18n="hero_eyebrow">Organizacao automatica para Windows</p>
+      <h1 data-i18n="hero_title">Great Folder</h1>
+      <p class="hero-copy" data-i18n="hero_copy">
         Organize Downloads, Desktop e outras pastas em segundos. Separe por tipo,
-        extensão ou data e mantenha tudo limpo, sem precisar fazer isso na mão.
+        extensao ou data e mantenha tudo limpo, sem precisar fazer isso na mao.
       </p>
       <div class="hero-actions">
-        <a class="button button-primary" href="#download">Baixar para Windows</a>
-        <a class="button button-secondary" href="#como-funciona">Ver como funciona</a>
+        <a class="button button-primary" href="#" data-checkout-button data-i18n="cta_buy">Comprar por R$ 25</a>
+        <a class="button button-secondary" href="#como-funciona" data-i18n="cta_how_it_works">Ver como funciona</a>
       </div>
       <div class="hero-points">
-        <span>Pagamento único</span>
-        <span>Sem assinatura</span>
-        <span>Com reversão</span>
+        <span data-i18n="hero_point_1">Pagamento unico</span>
+        <span data-i18n="hero_point_2">Sem assinatura</span>
+        <span data-i18n="hero_point_3">Com reversao</span>
       </div>
     </div>
   </header>
@@ -33,57 +38,57 @@
   <main>
     <section class="section section-tight" id="como-funciona">
       <div class="section-header">
-        <p class="eyebrow">Como funciona</p>
-        <h2>Organize sem complicar o Explorer</h2>
+        <p class="eyebrow" data-i18n="how_eyebrow">Como funciona</p>
+        <h2 data-i18n="how_title">Organize sem complicar o Explorer</h2>
       </div>
       <div class="steps-grid">
         <article class="feature-card">
           <span class="step-number">1</span>
-          <h3>Escolha a pasta</h3>
-          <p>Abra uma pasta do Windows ou arraste para dentro do Great Folder.</p>
+          <h3 data-i18n="step_1_title">Escolha a pasta</h3>
+          <p data-i18n="step_1_copy">Abra uma pasta do Windows ou arraste para dentro do Great Folder.</p>
         </article>
         <article class="feature-card">
           <span class="step-number">2</span>
-          <h3>Veja a prévia</h3>
-          <p>Compare como a pasta está agora e como ela vai ficar antes de executar.</p>
+          <h3 data-i18n="step_2_title">Veja a previa</h3>
+          <p data-i18n="step_2_copy">Compare como a pasta esta agora e como ela vai ficar antes de executar.</p>
         </article>
         <article class="feature-card">
           <span class="step-number">3</span>
-          <h3>Organize e reverta</h3>
-          <p>Execute a organização e volte atrás, se quiser, com histórico e reversão.</p>
+          <h3 data-i18n="step_3_title">Organize e reverta</h3>
+          <p data-i18n="step_3_copy">Execute a organizacao e volte atras, se quiser, com historico e reversao.</p>
         </article>
       </div>
     </section>
 
     <section class="section" id="recursos">
       <div class="section-header">
-        <p class="eyebrow">Recursos</p>
-        <h2>Feito para quem quer ordem rápida no Windows</h2>
+        <p class="eyebrow" data-i18n="features_eyebrow">Recursos</p>
+        <h2 data-i18n="features_title">Feito para quem quer ordem rapida no Windows</h2>
       </div>
       <div class="features-grid">
         <article class="feature-card">
-          <h3>Organização por tipo</h3>
-          <p>Separe imagens, documentos, vídeos, executáveis e mais com poucos cliques.</p>
+          <h3 data-i18n="feature_1_title">Organizacao por tipo</h3>
+          <p data-i18n="feature_1_copy">Separe imagens, documentos, videos, executaveis e mais com poucos cliques.</p>
         </article>
         <article class="feature-card">
-          <h3>Organização por extensão</h3>
-          <p>Crie uma estrutura objetiva para arquivos como PDF, ZIP, JPG, MP3 e outros.</p>
+          <h3 data-i18n="feature_2_title">Organizacao por extensao</h3>
+          <p data-i18n="feature_2_copy">Crie uma estrutura objetiva para arquivos como PDF, ZIP, JPG, MP3 e outros.</p>
         </article>
         <article class="feature-card">
-          <h3>Automação</h3>
-          <p>Mantenha pastas sempre organizadas com regras que reaplicam o padrão automaticamente.</p>
+          <h3 data-i18n="feature_3_title">Automacao</h3>
+          <p data-i18n="feature_3_copy">Mantenha pastas sempre organizadas com regras que reaplicam o padrao automaticamente.</p>
         </article>
         <article class="feature-card">
-          <h3>Prévia antes de mover</h3>
-          <p>Veja o resultado previsto antes da execução real e reduza o risco de bagunça.</p>
+          <h3 data-i18n="feature_4_title">Previa antes de mover</h3>
+          <p data-i18n="feature_4_copy">Veja o resultado previsto antes da execucao real e reduza o risco de bagunca.</p>
         </article>
         <article class="feature-card">
-          <h3>Histórico e reversão</h3>
-          <p>Confira o que foi executado e desfaça a última execução ou tudo o que foi organizado.</p>
+          <h3 data-i18n="feature_5_title">Historico e reversao</h3>
+          <p data-i18n="feature_5_copy">Confira o que foi executado e desfaça a ultima execucao ou tudo o que foi organizado.</p>
         </article>
         <article class="feature-card">
-          <h3>Foco em produtividade</h3>
-          <p>Interface direta para organizar arquivos rápido, sem depender de fluxo manual no Explorer.</p>
+          <h3 data-i18n="feature_6_title">Foco em produtividade</h3>
+          <p data-i18n="feature_6_copy">Interface direta para organizar arquivos rapido, sem depender de fluxo manual no Explorer.</p>
         </article>
       </div>
     </section>
@@ -91,21 +96,46 @@
     <section class="section section-highlight">
       <div class="highlight-grid">
         <div>
-          <p class="eyebrow">Ideal para</p>
-          <h2>Downloads que vivem bagunçados</h2>
-          <p class="section-copy">
-            Se você baixa planilhas, PDFs, imagens, instaladores e arquivos soltos todos os dias,
-            o Great Folder transforma isso em uma estrutura clara e previsível.
+          <p class="eyebrow" data-i18n="ideal_eyebrow">Ideal para</p>
+          <h2 data-i18n="ideal_title">Downloads que vivem baguncados</h2>
+          <p class="section-copy" data-i18n="ideal_copy">
+            Se voce baixa planilhas, PDFs, imagens, instaladores e arquivos soltos todos os dias,
+            o Great Folder transforma isso em uma estrutura clara e previsivel.
           </p>
         </div>
         <div class="checklist-card">
-          <h3>Use no dia a dia para:</h3>
+          <h3 data-i18n="ideal_list_title">Use no dia a dia para:</h3>
           <ul>
-            <li>limpar a pasta Downloads</li>
-            <li>separar documentos por tipo</li>
-            <li>desempastar arquivos de subpastas</li>
-            <li>manter regras automáticas ativas</li>
+            <li data-i18n="ideal_list_1">limpar a pasta Downloads</li>
+            <li data-i18n="ideal_list_2">separar documentos por tipo</li>
+            <li data-i18n="ideal_list_3">desempastar arquivos de subpastas</li>
+            <li data-i18n="ideal_list_4">manter regras automaticas ativas</li>
           </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="comprar">
+      <div class="pricing-card">
+        <div class="pricing-copy">
+          <p class="eyebrow" data-i18n="pricing_eyebrow">Pagamento unico</p>
+          <h2 data-i18n="pricing_title">Compre o Great Folder</h2>
+          <p class="section-copy" data-i18n="pricing_copy">
+            O site esta pronto para cobrar com checkout do Paddle. Em GitHub Pages,
+            esse e o caminho certo para vender sem backend proprio no front.
+          </p>
+          <ul class="pricing-list">
+            <li data-i18n="pricing_list_1">licenca vitalicia</li>
+            <li data-i18n="pricing_list_2">sem assinatura</li>
+            <li data-i18n="pricing_list_3">checkout externo simples</li>
+          </ul>
+        </div>
+        <div class="pricing-panel">
+          <p class="price-label" data-i18n="price_label">Pagamento unico</p>
+          <p class="price-value" data-price-value>R$ 39</p>
+          <p class="price-note" data-i18n="price_note">Cole seu client-side token e seu price id do Paddle em site-config.js.</p>
+          <a class="button button-primary pricing-button" href="#" data-checkout-button data-i18n="cta_buy">Comprar por R$ 25</a>
+          <p class="download-note" id="checkout-status">Checkout do Paddle ainda nao configurado.</p>
         </div>
       </div>
     </section>
@@ -113,18 +143,30 @@
     <section class="section" id="download">
       <div class="download-card">
         <div>
-          <p class="eyebrow">Download</p>
-          <h2>Baixe o Great Folder para Windows</h2>
-          <p>
-            Esta página já está preparada para concentrar o instalador e as próximas versões do programa.
+          <p class="eyebrow" data-i18n="download_eyebrow">Download</p>
+          <h2 data-i18n="download_title">Baixe o Great Folder para Windows</h2>
+          <p data-i18n="download_copy">
+            Esta pagina ja esta preparada para concentrar o instalador e as proximas versoes do programa.
           </p>
         </div>
         <div class="download-actions">
-          <a class="button button-primary" href="#topo">Baixar para Windows</a>
-          <p class="download-note">Conecte aqui o link final do instalador `.exe` quando a build estiver pronta.</p>
+          <a class="button button-primary" href="#" data-checkout-button data-i18n="cta_buy">Comprar por R$ 25</a>
+          <p class="download-note" data-i18n="download_note">Depois, conecte a entrega do .exe ao checkout escolhido.</p>
         </div>
       </div>
     </section>
   </main>
+
+  <div class="locale-switcher" aria-label="Language selector">
+    <button class="locale-button" type="button" data-locale-button="pt-BR">
+      <span class="locale-flag" aria-hidden="true">🇧🇷</span>
+      <span>BR</span>
+    </button>
+    <span class="locale-separator">&gt;</span>
+    <button class="locale-button" type="button" data-locale-button="en-US">
+      <span class="locale-flag" aria-hidden="true">🇺🇸</span>
+      <span>US</span>
+    </button>
+  </div>
 </body>
 </html>
