@@ -196,7 +196,9 @@ main {
 
 .feature-card,
 .checklist-card,
-.download-card {
+.download-card,
+.pricing-card,
+.pricing-panel {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -260,6 +262,59 @@ main {
   padding: 24px;
 }
 
+.pricing-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 20px;
+  align-items: stretch;
+  padding: 24px;
+}
+
+.pricing-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pricing-list {
+  margin: 16px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.pricing-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 22px;
+  background: var(--panel-2);
+}
+
+.price-label,
+.price-note {
+  margin-bottom: 0;
+}
+
+.price-label {
+  color: var(--accent);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.price-value {
+  margin: 0;
+  font-size: clamp(2.4rem, 4vw, 3.2rem);
+  line-height: 1;
+  font-weight: 700;
+}
+
+.pricing-button {
+  width: 100%;
+  margin-top: 8px;
+}
+
 .download-actions {
   display: flex;
   flex-direction: column;
@@ -272,10 +327,57 @@ main {
   font-size: 0.92rem;
 }
 
+.locale-switcher {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 20;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(12, 37, 54, 0.94);
+  box-shadow: var(--shadow);
+}
+
+.locale-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: 600 0.92rem "Segoe UI", Arial, sans-serif;
+  cursor: pointer;
+}
+
+.locale-button.is-active {
+  background: rgba(31, 111, 255, 0.18);
+  border-color: rgba(127, 210, 255, 0.32);
+  color: var(--text);
+}
+
+.locale-flag {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.locale-separator {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
 @media (max-width: 920px) {
   .steps-grid,
   .features-grid,
   .highlight-grid,
+  .pricing-card,
   .download-card {
     grid-template-columns: 1fr;
   }
@@ -293,5 +395,11 @@ main {
 
   .section {
     width: min(1120px, calc(100% - 28px));
+  }
+
+  .locale-switcher {
+    right: 12px;
+    bottom: 12px;
+    padding: 8px 10px;
   }
 }
