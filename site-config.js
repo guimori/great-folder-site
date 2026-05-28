@@ -16,4 +16,9 @@ window.GREAT_FOLDER_SITE = {
       checkoutLabel: "Buy now",
     },
   },
+  delivery: {
+    apiBaseUrl: "https://great-folder.onrender.com",
+    supportEmail: "guilhermegmori@gmail.com",
+    fallbackDownloadUrl: "",
+  },
 };

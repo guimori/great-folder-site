@@ -342,6 +342,126 @@ main {
   box-shadow: var(--shadow);
 }
 
+.redeem-page {
+  min-height: 100vh;
+  padding: 40px 20px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.redeem-shell {
+  width: min(860px, 100%);
+}
+
+.redeem-header {
+  max-width: 680px;
+  margin: 0 auto 24px;
+  text-align: center;
+}
+
+.redeem-header h1 {
+  margin-bottom: 14px;
+  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  line-height: 1.02;
+}
+
+.redeem-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  gap: 18px;
+  padding: 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.redeem-form,
+.redeem-result {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.redeem-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.redeem-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.redeem-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 14px;
+  border: 1px solid rgba(127, 210, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(7, 26, 39, 0.52);
+  color: var(--text);
+  font: 500 1rem "Segoe UI", Arial, sans-serif;
+}
+
+.redeem-input:focus {
+  outline: 2px solid rgba(127, 210, 255, 0.36);
+  border-color: rgba(127, 210, 255, 0.36);
+}
+
+.redeem-button {
+  width: 100%;
+  margin-top: 6px;
+}
+
+.redeem-result {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.redeem-result h2 {
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+}
+
+.redeem-result-block {
+  margin: 0 0 18px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(7, 26, 39, 0.42);
+}
+
+.redeem-result-label {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.redeem-license {
+  display: block;
+  color: var(--text);
+  font: 700 1.05rem "Consolas", "Courier New", monospace;
+  word-break: break-all;
+}
+
+.redeem-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+#redeem-feedback.is-error {
+  color: #ff9b9b;
+}
+
 .locale-button {
   display: inline-flex;
   align-items: center;
@@ -378,7 +498,8 @@ main {
   .features-grid,
   .highlight-grid,
   .pricing-card,
-  .download-card {
+  .download-card,
+  .redeem-card {
     grid-template-columns: 1fr;
   }
 

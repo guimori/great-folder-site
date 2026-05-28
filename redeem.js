@@ -1,0 +1,202 @@
+(function () {
+  const config = window.GREAT_FOLDER_SITE || {};
+  const deliveryConfig = config.delivery || {};
+  const apiBaseUrl = String(deliveryConfig.apiBaseUrl || "").trim().replace(/\/$/, "");
+  const supportEmail = String(deliveryConfig.supportEmail || "").trim();
+  const fallbackDownloadUrl = String(deliveryConfig.fallbackDownloadUrl || "").trim();
+
+  const form = document.getElementById("delivery-form");
+  const feedback = document.getElementById("redeem-feedback");
+  const result = document.getElementById("redeem-result");
+  const licenseKeyNode = document.getElementById("license-key");
+  const downloadButton = document.getElementById("download-button");
+  const copyButton = document.getElementById("copy-button");
+  const emailInput = document.getElementById("email");
+  const orderInput = document.getElementById("order_id");
+  const localeButtons = document.querySelectorAll("[data-locale-button]");
+  const metaDescription = document.querySelector('meta[name="description"]');
+
+  const translations = {
+    "pt-BR": {
+      page_title: "Resgatar compra | Great Folder",
+      page_description: "Resgate sua licença e download do Great Folder após a compra.",
+      redeem_eyebrow: "Pós-compra",
+      redeem_title: "Resgate sua licença",
+      redeem_copy: "Informe o email usado na compra e o número do pedido para ver sua chave e baixar o Great Folder.",
+      redeem_email_label: "Email da compra",
+      redeem_order_label: "Número do pedido",
+      redeem_submit: "Ver minha licença",
+      redeem_hint: "Se o preenchimento automático não acontecer, copie os dados da Kiwify e cole aqui.",
+      redeem_result_eyebrow: "Entrega encontrada",
+      redeem_result_title: "Sua licença está pronta",
+      redeem_license_label: "Chave",
+      redeem_download: "Baixar para Windows",
+      redeem_copy_button: "Copiar chave",
+      redeem_activation_hint: "Abra o app e cole a chave na tela de ativação.",
+      lookup_missing_api: "A página de resgate ainda não foi conectada à API de entregas.",
+      lookup_loading: "Buscando sua licença...",
+      lookup_missing_fields: "Preencha o email e o número do pedido.",
+      lookup_not_found: "Não encontramos essa entrega. Confira os dados da compra.",
+      lookup_error: "Não foi possível buscar sua entrega agora.",
+      copy_success: "Chave copiada.",
+      support_hint: supportEmail ? `Se continuar falhando, fale com ${supportEmail}.` : "Se continuar falhando, fale com o suporte.",
+    },
+    "en-US": {
+      page_title: "Claim purchase | Great Folder",
+      page_description: "Claim your Great Folder license and download after purchase.",
+      redeem_eyebrow: "Post-purchase",
+      redeem_title: "Claim your license",
+      redeem_copy: "Enter the purchase email and the order number to see your key and download Great Folder.",
+      redeem_email_label: "Purchase email",
+      redeem_order_label: "Order number",
+      redeem_submit: "Show my license",
+      redeem_hint: "If the fields are not filled automatically, copy the data from Kiwify and paste it here.",
+      redeem_result_eyebrow: "Delivery found",
+      redeem_result_title: "Your license is ready",
+      redeem_license_label: "Key",
+      redeem_download: "Download for Windows",
+      redeem_copy_button: "Copy key",
+      redeem_activation_hint: "Open the app and paste the key into the activation screen.",
+      lookup_missing_api: "The delivery page is not connected to the delivery API yet.",
+      lookup_loading: "Looking up your license...",
+      lookup_missing_fields: "Fill in your email and order number.",
+      lookup_not_found: "We could not find that delivery. Check your purchase details.",
+      lookup_error: "Could not load your delivery right now.",
+      copy_success: "Key copied.",
+      support_hint: supportEmail ? `If this keeps failing, contact ${supportEmail}.` : "If this keeps failing, contact support.",
+    },
+  };
+
+  function getInitialLocale() {
+    const savedLocale = window.localStorage.getItem("great-folder-locale");
+    if (savedLocale && translations[savedLocale]) {
+      return savedLocale;
+    }
+    const browserLocale = String(window.navigator.language || "pt-BR");
+    return browserLocale.toLowerCase().startsWith("en") ? "en-US" : "pt-BR";
+  }
+
+  let currentLocale = getInitialLocale();
+
+  function t(key) {
+    return (translations[currentLocale] && translations[currentLocale][key]) || key;
+  }
+
+  function setFeedback(message, isError) {
+    if (!feedback) {
+      return;
+    }
+    feedback.textContent = message;
+    feedback.classList.toggle("is-error", Boolean(isError));
+  }
+
+  function applyLocale() {
+    document.documentElement.lang = currentLocale;
+    document.title = t("page_title");
+    if (metaDescription) {
+      metaDescription.setAttribute("content", t("page_description"));
+    }
+    document.querySelectorAll("[data-i18n]").forEach((node) => {
+      const key = node.getAttribute("data-i18n");
+      if (key) {
+        node.textContent = t(key);
+      }
+    });
+    localeButtons.forEach((button) => {
+      button.classList.toggle("is-active", button.getAttribute("data-locale-button") === currentLocale);
+    });
+  }
+
+  function prefillFromQuery() {
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email") || params.get("buyer_email") || params.get("customer_email") || "";
+    const orderId = params.get("order_id") || params.get("orderId") || params.get("transaction_id") || params.get("sale_id") || "";
+    if (email) {
+      emailInput.value = email;
+    }
+    if (orderId) {
+      orderInput.value = orderId;
+    }
+  }
+
+  async function lookupDelivery(email, orderId) {
+    const response = await fetch(`${apiBaseUrl}/v1/deliveries/lookup`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, order_id: orderId }),
+    });
+    let payload = {};
+    try {
+      payload = await response.json();
+    } catch (_error) {
+      payload = {};
+    }
+    if (!response.ok) {
+      const detail = String(payload.detail || "").trim();
+      if (response.status === 404) {
+        throw new Error(`${t("lookup_not_found")} ${t("support_hint")}`.trim());
+      }
+      throw new Error(detail || `${t("lookup_error")} ${t("support_hint")}`.trim());
+    }
+    return payload;
+  }
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    result.hidden = true;
+
+    if (!apiBaseUrl) {
+      setFeedback(t("lookup_missing_api"), true);
+      return;
+    }
+
+    const email = emailInput.value.trim();
+    const orderId = orderInput.value.trim();
+    if (!email || !orderId) {
+      setFeedback(t("lookup_missing_fields"), true);
+      return;
+    }
+
+    setFeedback(t("lookup_loading"), false);
+    try {
+      const payload = await lookupDelivery(email, orderId);
+      const licenseKey = String(payload.license_key || "").trim();
+      const downloadUrl = String(payload.download_url || fallbackDownloadUrl || "").trim();
+      licenseKeyNode.textContent = licenseKey;
+      downloadButton.href = downloadUrl || "#";
+      downloadButton.toggleAttribute("aria-disabled", !downloadUrl);
+      result.hidden = false;
+      setFeedback("", false);
+    } catch (error) {
+      setFeedback(error.message || t("lookup_error"), true);
+    }
+  });
+
+  copyButton.addEventListener("click", async () => {
+    const key = licenseKeyNode.textContent.trim();
+    if (!key) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(key);
+      setFeedback(t("copy_success"), false);
+    } catch (_error) {
+      setFeedback(key, false);
+    }
+  });
+
+  localeButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const nextLocale = button.getAttribute("data-locale-button");
+      if (!nextLocale || !translations[nextLocale]) {
+        return;
+      }
+      currentLocale = nextLocale;
+      window.localStorage.setItem("great-folder-locale", currentLocale);
+      applyLocale();
+    });
+  });
+
+  applyLocale();
+  prefillFromQuery();
+})();
