@@ -11,7 +11,6 @@
   const licenseKeyNode = document.getElementById("license-key");
   const downloadButton = document.getElementById("download-button");
   const copyButton = document.getElementById("copy-button");
-  const emailInput = document.getElementById("email");
   const orderInput = document.getElementById("order_id");
   const localeButtons = document.querySelectorAll("[data-locale-button]");
   const metaDescription = document.querySelector('meta[name="description"]');
@@ -22,11 +21,10 @@
       page_description: "Resgate sua licença e download do Great Folder após a compra.",
       redeem_eyebrow: "Pós-compra",
       redeem_title: "Resgate sua licença",
-      redeem_copy: "Informe o email usado na compra e o número do pedido para ver sua chave e baixar o Great Folder.",
-      redeem_email_label: "Email da compra",
+      redeem_copy: "Se a licença não aparecer automaticamente, informe o número do pedido para ver sua chave e baixar o Great Folder.",
       redeem_order_label: "Número do pedido",
       redeem_submit: "Ver minha licença",
-      redeem_hint: "Se o preenchimento automático não acontecer, copie os dados da Kiwify e cole aqui.",
+      redeem_hint: "Se o preenchimento automático não acontecer, copie o número do pedido na Kiwify e cole aqui.",
       redeem_result_eyebrow: "Entrega encontrada",
       redeem_result_title: "Sua licença está pronta",
       redeem_license_label: "Chave",
@@ -35,7 +33,7 @@
       redeem_activation_hint: "Abra o app e cole a chave na tela de ativação.",
       lookup_missing_api: "A página de resgate ainda não foi conectada à API de entregas.",
       lookup_loading: "Buscando sua licença...",
-      lookup_missing_fields: "Preencha o email e o número do pedido.",
+      lookup_missing_fields: "Preencha o número do pedido.",
       lookup_not_found: "Não encontramos essa entrega. Confira os dados da compra.",
       lookup_error: "Não foi possível buscar sua entrega agora.",
       copy_success: "Chave copiada.",
@@ -46,11 +44,10 @@
       page_description: "Claim your Great Folder license and download after purchase.",
       redeem_eyebrow: "Post-purchase",
       redeem_title: "Claim your license",
-      redeem_copy: "Enter the purchase email and the order number to see your key and download Great Folder.",
-      redeem_email_label: "Purchase email",
+      redeem_copy: "If your license does not appear automatically, enter the order number to see your key and download Great Folder.",
       redeem_order_label: "Order number",
       redeem_submit: "Show my license",
-      redeem_hint: "If the fields are not filled automatically, copy the data from Kiwify and paste it here.",
+      redeem_hint: "If auto-fill does not happen, copy the order number from Kiwify and paste it here.",
       redeem_result_eyebrow: "Delivery found",
       redeem_result_title: "Your license is ready",
       redeem_license_label: "Key",
@@ -59,7 +56,7 @@
       redeem_activation_hint: "Open the app and paste the key into the activation screen.",
       lookup_missing_api: "The delivery page is not connected to the delivery API yet.",
       lookup_loading: "Looking up your license...",
-      lookup_missing_fields: "Fill in your email and order number.",
+      lookup_missing_fields: "Fill in your order number.",
       lookup_not_found: "We could not find that delivery. Check your purchase details.",
       lookup_error: "Could not load your delivery right now.",
       copy_success: "Key copied.",
@@ -109,21 +106,19 @@
 
   function prefillFromQuery() {
     const params = new URLSearchParams(window.location.search);
-    const email = params.get("email") || params.get("buyer_email") || params.get("customer_email") || "";
+    const claimToken = params.get("claim_token") || params.get("claimToken") || "";
     const orderId = params.get("order_id") || params.get("orderId") || params.get("transaction_id") || params.get("sale_id") || "";
-    if (email) {
-      emailInput.value = email;
-    }
     if (orderId) {
       orderInput.value = orderId;
     }
+    return { claimToken, orderId };
   }
 
-  async function lookupDelivery(email, orderId) {
-    const response = await fetch(`${apiBaseUrl}/v1/deliveries/lookup`, {
+  async function postJson(path, payload) {
+    const response = await fetch(`${apiBaseUrl}${path}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, order_id: orderId }),
+      body: JSON.stringify(payload),
     });
     let payload = {};
     try {
@@ -141,6 +136,45 @@
     return payload;
   }
 
+  async function lookupByOrder(orderId) {
+    return postJson("/v1/deliveries/lookup", { order_id: orderId });
+  }
+
+  async function lookupByClaimToken(claimToken) {
+    return postJson("/v1/deliveries/claim", { claim_token: claimToken });
+  }
+
+  function showDelivery(payload) {
+    const licenseKey = String(payload.license_key || "").trim();
+    const downloadUrl = String(payload.download_url || fallbackDownloadUrl || "").trim();
+    licenseKeyNode.textContent = licenseKey;
+    downloadButton.href = downloadUrl || "#";
+    downloadButton.toggleAttribute("aria-disabled", !downloadUrl);
+    result.hidden = false;
+    setFeedback("", false);
+  }
+
+  async function tryAutomaticLookup(initial) {
+    if (!apiBaseUrl) {
+      setFeedback(t("lookup_missing_api"), true);
+      return;
+    }
+    try {
+      if (initial.claimToken) {
+        setFeedback(t("lookup_loading"), false);
+        showDelivery(await lookupByClaimToken(initial.claimToken));
+        return;
+      }
+      if (initial.orderId) {
+        setFeedback(t("lookup_loading"), false);
+        showDelivery(await lookupByOrder(initial.orderId));
+        return;
+      }
+    } catch (_error) {
+      setFeedback("", false);
+    }
+  }
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     result.hidden = true;
@@ -150,23 +184,15 @@
       return;
     }
 
-    const email = emailInput.value.trim();
     const orderId = orderInput.value.trim();
-    if (!email || !orderId) {
+    if (!orderId) {
       setFeedback(t("lookup_missing_fields"), true);
       return;
     }
 
     setFeedback(t("lookup_loading"), false);
     try {
-      const payload = await lookupDelivery(email, orderId);
-      const licenseKey = String(payload.license_key || "").trim();
-      const downloadUrl = String(payload.download_url || fallbackDownloadUrl || "").trim();
-      licenseKeyNode.textContent = licenseKey;
-      downloadButton.href = downloadUrl || "#";
-      downloadButton.toggleAttribute("aria-disabled", !downloadUrl);
-      result.hidden = false;
-      setFeedback("", false);
+      showDelivery(await lookupByOrder(orderId));
     } catch (error) {
       setFeedback(error.message || t("lookup_error"), true);
     }
@@ -198,5 +224,5 @@
   });
 
   applyLocale();
-  prefillFromQuery();
+  tryAutomaticLookup(prefillFromQuery());
 })();
