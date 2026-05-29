@@ -107,7 +107,13 @@
   function prefillFromQuery() {
     const params = new URLSearchParams(window.location.search);
     const claimToken = params.get("claim_token") || params.get("claimToken") || "";
-    const orderId = params.get("order_id") || params.get("orderId") || params.get("transaction_id") || params.get("sale_id") || "";
+    const orderId =
+      params.get("order_id") ||
+      params.get("orderId") ||
+      params.get("order_code") ||
+      params.get("transaction_id") ||
+      params.get("sale_id") ||
+      "";
     if (orderId) {
       orderInput.value = orderId;
     }
