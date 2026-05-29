@@ -7,6 +7,7 @@
 
   const feedback = document.getElementById("redeem-feedback");
   const loadingText = document.getElementById("redeem-loading-text");
+  const statusIcon = document.getElementById("redeem-status-icon");
   const licenseKeyNode = document.getElementById("license-key");
   const orderCodeNode = document.getElementById("order-code");
   const downloadButton = document.getElementById("download-button");
@@ -36,7 +37,7 @@
       lookup_not_found: "Ainda não encontramos sua licença. Atualize a página em alguns instantes.",
       lookup_error: "Não foi possível preparar sua licença agora.",
       lookup_ready: "Licença gerada com sucesso.",
-      copy_success: "Chave copiada.",
+      copy_success: "Chave copiada!",
       support_hint: supportEmail ? `Se isso persistir, fale com ${supportEmail}.` : "Se isso persistir, fale com o suporte.",
     },
     "en-US": {
@@ -59,7 +60,7 @@
       lookup_not_found: "We still could not find your license. Refresh this page in a moment.",
       lookup_error: "Could not prepare your license right now.",
       lookup_ready: "License generated successfully.",
-      copy_success: "Key copied.",
+      copy_success: "Key copied!",
       support_hint: supportEmail ? `If this persists, contact ${supportEmail}.` : "If this persists, contact support.",
     },
   };
@@ -78,6 +79,7 @@
   }
 
   let currentLocale = getInitialLocale();
+  let copySucceeded = false;
 
   function t(key) {
     return (translations[currentLocale] && translations[currentLocale][key]) || key;
@@ -95,6 +97,29 @@
     if (loadingText) {
       loadingText.textContent = t(messageKey);
     }
+  }
+
+  function setStatusPending() {
+    if (!statusIcon) {
+      return;
+    }
+    statusIcon.className = "redeem-spinner";
+    statusIcon.textContent = "";
+  }
+
+  function setStatusComplete() {
+    if (!statusIcon) {
+      return;
+    }
+    statusIcon.className = "redeem-status-check";
+    statusIcon.textContent = "✅";
+  }
+
+  function updateCopyButtonLabel() {
+    if (!copyButton) {
+      return;
+    }
+    copyButton.textContent = copySucceeded ? t("copy_success") : t("redeem_copy_button");
   }
 
   function setDownloadReady(downloadUrl) {
@@ -124,6 +149,7 @@
     localeButtons.forEach((button) => {
       button.classList.toggle("is-active", button.getAttribute("data-locale-button") === currentLocale);
     });
+    updateCopyButtonLabel();
   }
 
   function parseQuery() {
@@ -172,7 +198,7 @@
   }
 
   function showDelivery(payload) {
-    const orderId = String(payload.order_id || "").trim();
+    const orderId = String(payload.order_ref || payload.order_id || "").trim();
     const licenseKey = String(payload.license_key || "").trim();
     const downloadUrl = String(payload.download_url || fallbackDownloadUrl || "").trim();
 
@@ -180,6 +206,7 @@
     licenseKeyNode.textContent = licenseKey || PLACEHOLDER;
     copyButton.disabled = !licenseKey;
     activationHint.hidden = !licenseKey;
+    copySucceeded = false;
 
     if (downloadUrl) {
       setDownloadReady(downloadUrl);
@@ -187,8 +214,10 @@
       setDownloadDisabled();
     }
 
+    setStatusComplete();
     setLoading("lookup_ready");
     setFeedback("", false);
+    updateCopyButtonLabel();
   }
 
   async function pollForDelivery() {
@@ -202,6 +231,9 @@
     licenseKeyNode.textContent = PLACEHOLDER;
     copyButton.disabled = true;
     activationHint.hidden = true;
+    copySucceeded = false;
+    setStatusPending();
+    updateCopyButtonLabel();
     setDownloadDisabled();
 
     if (!query.claimToken && !query.orderId) {
@@ -236,7 +268,8 @@
     }
     try {
       await navigator.clipboard.writeText(key);
-      setFeedback(t("copy_success"), false);
+      copySucceeded = true;
+      updateCopyButtonLabel();
     } catch (_error) {
       setFeedback(key, false);
     }

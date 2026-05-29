@@ -416,6 +416,16 @@ main {
   animation: redeem-spin 0.8s linear infinite;
 }
 
+.redeem-status-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 16px;
+  line-height: 1;
+}
+
 .redeem-result-block {
   margin: 0 0 18px;
   padding: 16px;
