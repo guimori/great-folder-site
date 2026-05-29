@@ -16,41 +16,43 @@
     <section class="redeem-shell">
       <div class="redeem-header">
         <p class="eyebrow" data-i18n="redeem_eyebrow">Pós-compra</p>
-        <h1 data-i18n="redeem_title">Resgate sua licença</h1>
+        <h1 data-i18n="redeem_title">Sua licença está sendo preparada</h1>
         <p class="section-copy" data-i18n="redeem_copy">
-          Informe o email usado na compra e o número do pedido para ver sua chave e baixar o Great Folder.
+          Aguarde alguns segundos enquanto geramos sua licença e liberamos o download do Great Folder.
         </p>
       </div>
 
       <div class="redeem-card">
-        <form id="delivery-form" class="redeem-form">
-          <label class="redeem-label" for="order_id" data-i18n="redeem_order_label">Número do pedido</label>
-          <input id="order_id" name="order_id" class="redeem-input" type="text" autocomplete="off" required>
-
-          <button class="button button-primary redeem-button" type="submit" data-i18n="redeem_submit">Ver minha licença</button>
+        <section class="redeem-status-panel">
+          <div class="redeem-loading">
+            <span class="redeem-spinner" aria-hidden="true"></span>
+            <span id="redeem-loading-text" data-i18n="redeem_loading">Gerando sua licença...</span>
+          </div>
           <p class="download-note" id="redeem-feedback" data-i18n="redeem_hint">
-            Se o preenchimento automático não acontecer, copie o número do pedido na Kiwify e cole aqui.
+            Se isso demorar mais do que o normal, volte para a área da Kiwify e abra este link novamente.
           </p>
-        </form>
+        </section>
 
-        <div id="redeem-result" class="redeem-result" hidden>
-          <p class="eyebrow" data-i18n="redeem_result_eyebrow">Entrega encontrada</p>
-          <h2 data-i18n="redeem_result_title">Sua licença está pronta</h2>
+        <section id="redeem-result" class="redeem-result">
+          <div class="redeem-result-block">
+            <span class="redeem-result-label" data-i18n="redeem_order_label">Número do pedido</span>
+            <code id="order-code" class="redeem-license redeem-license-soft">-----------</code>
+          </div>
 
           <div class="redeem-result-block">
             <span class="redeem-result-label" data-i18n="redeem_license_label">Chave</span>
-            <code id="license-key" class="redeem-license"></code>
+            <code id="license-key" class="redeem-license">-----------</code>
           </div>
 
           <div class="redeem-actions">
-            <a id="download-button" class="button button-primary" href="#" target="_blank" rel="noopener" data-i18n="redeem_download">Baixar para Windows</a>
-            <button id="copy-button" class="button button-secondary" type="button" data-i18n="redeem_copy_button">Copiar chave</button>
+            <a id="download-button" class="button button-primary is-disabled" href="#" target="_blank" rel="noopener" aria-disabled="true" data-i18n="redeem_download">Baixar para Windows</a>
+            <button id="copy-button" class="button button-secondary" type="button" data-i18n="redeem_copy_button" disabled>Copiar chave</button>
           </div>
 
-          <p class="download-note" data-i18n="redeem_activation_hint">
-            Abra o app e cole a chave na tela de ativação.
+          <p class="download-note" id="redeem-activation-hint" data-i18n="redeem_activation_hint">
+            Assim que a chave aparecer, abra o app e cole na tela de ativação.
           </p>
-        </div>
+        </section>
       </div>
     </section>
   </main>
