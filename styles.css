@@ -377,6 +377,59 @@ main {
   box-shadow: var(--shadow);
 }
 
+.recover-card {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.recover-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.recover-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recover-label {
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.recover-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel-2);
+  color: var(--text);
+  font: 400 1rem "Segoe UI", Arial, sans-serif;
+}
+
+.recover-input::placeholder {
+  color: var(--muted);
+}
+
+.recover-input:focus {
+  outline: none;
+  border-color: rgba(127, 210, 255, 0.45);
+}
+
+.recover-submit {
+  width: 100%;
+}
+
 .redeem-status-panel,
 .redeem-result {
   background: var(--panel-2);
