@@ -315,6 +315,10 @@ main {
   margin-top: 8px;
 }
 
+.pricing-secondary-button {
+  margin-top: 0;
+}
+
 .download-actions {
   display: flex;
   flex-direction: column;
