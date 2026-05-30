@@ -80,6 +80,7 @@
 
   let currentLocale = getInitialLocale();
   let copySucceeded = false;
+  let licenseTxtDownloaded = false;
 
   function t(key) {
     return (translations[currentLocale] && translations[currentLocale][key]) || key;
@@ -120,6 +121,39 @@
       return;
     }
     copyButton.textContent = copySucceeded ? t("copy_success") : t("redeem_copy_button");
+  }
+
+  function downloadLicenseTxt(licenseKey) {
+    if (!licenseKey || licenseTxtDownloaded) {
+      return;
+    }
+
+    const lines = currentLocale === "en-US"
+      ? [
+          "Great Folder License",
+          "",
+          `Key: ${licenseKey}`,
+          "",
+          "Keep this file in a safe place.",
+        ]
+      : [
+          "Licença Great Folder",
+          "",
+          `Chave: ${licenseKey}`,
+          "",
+          "Guarde este arquivo em um lugar seguro.",
+        ];
+
+    const blob = new Blob([`${lines.join("\n")}\n`], { type: "text/plain;charset=utf-8" });
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = objectUrl;
+    anchor.download = "great-folder-licenca.txt";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    licenseTxtDownloaded = true;
   }
 
   function setDownloadReady(downloadUrl) {
@@ -218,6 +252,7 @@
     setLoading("lookup_ready");
     setFeedback("", false);
     updateCopyButtonLabel();
+    downloadLicenseTxt(licenseKey);
   }
 
   async function pollForDelivery() {
