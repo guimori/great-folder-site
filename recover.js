@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const config = window.GREAT_FOLDER_SITE || {};
   const deliveryConfig = config.delivery || {};
   const apiBaseUrl = String(deliveryConfig.apiBaseUrl || "").trim().replace(/\/$/, "");
@@ -17,10 +17,13 @@
   const licenseKeysNode = document.getElementById("recover-license-keys");
   const downloadButton = document.getElementById("recover-download-button");
   const copyButton = document.getElementById("recover-copy-button");
+  const downloadTxtButton = document.getElementById("recover-download-txt-button");
   const localeButtons = document.querySelectorAll("[data-locale-button]");
   const metaDescription = document.querySelector('meta[name="description"]');
 
   const PLACEHOLDER = "-----------";
+  let copied = false;
+  let latestLicenseKeys = [];
 
   const translations = {
     "pt-BR": {
@@ -37,7 +40,7 @@
       recover_error: "Não foi possível enviar seu link agora.",
       recover_missing_api: "A recuperação ainda não foi configurada.",
       recover_loading: "Validando seu link...",
-      recover_claim_hint: "Aguarde alguns segundos enquanto validamos seu acesso.",
+      recover_claim_hint: "Aguarde o carregamento das suas licenças.",
       recover_claim_error: "Este link é inválido ou expirou.",
       recover_keys_label: "Licenças",
       recover_copy_button: "Copiar licenças",
@@ -59,7 +62,7 @@
       recover_error: "Could not send your link right now.",
       recover_missing_api: "Recovery has not been configured yet.",
       recover_loading: "Validating your link...",
-      recover_claim_hint: "Please wait while we validate your access.",
+      recover_claim_hint: "Please wait while your licenses load.",
       recover_claim_error: "This link is invalid or expired.",
       recover_keys_label: "Licenses",
       recover_copy_button: "Copy licenses",
@@ -70,8 +73,6 @@
   };
 
   let currentLocale = getInitialLocale();
-  let copied = false;
-  let txtDownloaded = false;
 
   function getInitialLocale() {
     const savedLocale = window.localStorage.getItem("great-folder-locale");
@@ -120,7 +121,7 @@
   }
 
   function downloadLicenseTxt(licenseKeys) {
-    if (!Array.isArray(licenseKeys) || !licenseKeys.length || txtDownloaded) {
+    if (!Array.isArray(licenseKeys) || !licenseKeys.length) {
       return;
     }
     const blob = new Blob([`${licenseKeys.join("\n")}\n`], { type: "text/plain;charset=utf-8" });
@@ -132,7 +133,6 @@
     anchor.click();
     anchor.remove();
     window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
-    txtDownloaded = true;
   }
 
   function applyLocale() {
@@ -179,15 +179,19 @@
     setStatusPending();
     setDownloadDisabled();
     copyButton.disabled = true;
+    downloadTxtButton.disabled = true;
     copied = false;
+    latestLicenseKeys = [];
     updateCopyButtonLabel();
     licenseKeysNode.textContent = PLACEHOLDER;
   }
 
   function showClaimResult(payload) {
     const licenseKeys = Array.isArray(payload.license_keys) ? payload.license_keys : [];
+    latestLicenseKeys = licenseKeys;
     licenseKeysNode.textContent = licenseKeys.join("\n") || PLACEHOLDER;
     copyButton.disabled = !licenseKeys.length;
+    downloadTxtButton.disabled = !licenseKeys.length;
     copied = false;
     updateCopyButtonLabel();
     setStatusComplete();
@@ -240,6 +244,10 @@
     await navigator.clipboard.writeText(keys);
     copied = true;
     updateCopyButtonLabel();
+  });
+
+  downloadTxtButton.addEventListener("click", () => {
+    downloadLicenseTxt(latestLicenseKeys);
   });
 
   localeButtons.forEach((button) => {
