@@ -38,7 +38,7 @@
       lookup_error: "Não foi possível preparar sua licença agora.",
       lookup_ready: "Licença gerada com sucesso.",
       copy_success: "Chave copiada!",
-      support_hint: supportEmail ? `Se isso persistir, fale com ${supportEmail}.` : "Se isso persistir, fale com o suporte.",
+      support_hint: supportEmail ? `Se isso persistir, responda ${supportEmail}.` : "Se isso persistir, responda este email.",
     },
     "en-US": {
       page_title: "Claim purchase | Great Folder",

@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const config = window.GREAT_FOLDER_SITE || {};
   const deliveryConfig = config.delivery || {};
   const apiBaseUrl = String(deliveryConfig.apiBaseUrl || "").trim().replace(/\/$/, "");
