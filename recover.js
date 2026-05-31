@@ -35,7 +35,7 @@
       recover_email_label: "Email da compra",
       recover_submit: "Enviar link de recuperação",
       recover_submit_loading: "Enviando...",
-      recover_hint: "Insira seu email para te enviarmos suas licen?as.",
+      recover_hint: "Insira seu email para te enviarmos suas licenças.",
       recover_success: "Se existir uma licença para este email, nós enviaremos um link de recuperação.",
       recover_error: "Não foi possível enviar seu link agora.",
       recover_missing_api: "A recuperação ainda não foi configurada.",
