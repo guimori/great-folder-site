@@ -16,7 +16,7 @@
       page_description: "Organize arquivos e pastas no Windows com poucos cliques.",
       hero_eyebrow: "Organização automática para Windows",
       hero_title: "Great Folder",
-      hero_copy: "Organize Downloads, Desktop e outras pastas em segundos. Separe por tipo, extensão ou data e mantenha tudo limpo, sem precisar fazer isso na mão.",
+      hero_copy: "Mantenha suas pastas organizadas com poucos cliques.",
       cta_buy: "Comprar por R$ 29",
       cta_how_it_works: "Ver como funciona",
       cta_recover_license: "Perdi minha licença",
