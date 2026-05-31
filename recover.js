@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const config = window.GREAT_FOLDER_SITE || {};
   const deliveryConfig = config.delivery || {};
   const apiBaseUrl = String(deliveryConfig.apiBaseUrl || "").trim().replace(/\/$/, "");
@@ -8,8 +8,22 @@
   const emailInput = document.getElementById("recover-email");
   const submitButton = document.getElementById("recover-submit");
   const feedback = document.getElementById("recover-feedback");
+  const requestState = document.getElementById("recover-request-state");
+  const claimState = document.getElementById("recover-claim-state");
+  const claimFeedback = document.getElementById("recover-claim-feedback");
+  const loadingText = document.getElementById("recover-loading-text");
+  const statusIcon = document.getElementById("recover-status-icon");
+  const resultPanel = document.getElementById("recover-result");
+  const licenseKeysNode = document.getElementById("recover-license-keys");
+  const downloadButton = document.getElementById("recover-download-button");
+  const copyButton = document.getElementById("recover-copy-button");
   const localeButtons = document.querySelectorAll("[data-locale-button]");
   const metaDescription = document.querySelector('meta[name="description"]');
+
+  const PLACEHOLDER = "-----------";
+  let currentLocale = getInitialLocale();
+  let copied = false;
+  let txtDownloaded = false;
 
   const translations = {
     "pt-BR": {
@@ -17,30 +31,44 @@
       page_description: "Recupere sua licença do Great Folder pelo email da compra.",
       recover_eyebrow: "Recuperação",
       recover_title: "Recupere sua licença",
-      recover_copy: "Digite o email usado na compra. Se existir uma licença vinculada a ele, nós enviaremos agora.",
+      recover_copy: "Digite o email usado na compra. Se existir uma licença vinculada a ele, nós enviaremos um link seguro de recuperação.",
       recover_email_label: "Email da compra",
-      recover_submit: "Enviar licença por email",
+      recover_submit: "Enviar link de recuperação",
       recover_submit_loading: "Enviando...",
       recover_hint: "Use o mesmo email cadastrado na Kiwify.",
-      recover_success: "Se existir uma licença para este email, nós enviamos agora.",
-      recover_error: "Não foi possível enviar sua licença agora.",
-      recover_missing_api: "A recuperação por email ainda não foi configurada.",
-      support_hint: supportEmail ? `Se isso persistir, fale com ${supportEmail}.` : "Se isso persistir, fale com o suporte.",
+      recover_success: "Se existir uma licença para este email, nós enviaremos um link de recuperação.",
+      recover_error: "Não foi possível enviar seu link agora.",
+      recover_missing_api: "A recuperação ainda não foi configurada.",
+      recover_loading: "Validando seu link...",
+      recover_claim_hint: "Aguarde alguns segundos enquanto validamos seu acesso.",
+      recover_claim_error: "Este link é inválido ou expirou.",
+      recover_keys_label: "Licenças",
+      recover_copy_button: "Copiar licenças",
+      recover_copy_success: "Licenças copiadas!",
+      redeem_download: "Baixar para Windows",
+      support_hint: supportEmail ? `Se isso persistir, responda ${supportEmail}.` : "Se isso persistir, responda ao email de recuperação.",
     },
     "en-US": {
       page_title: "Recover license | Great Folder",
       page_description: "Recover your Great Folder license using the purchase email.",
       recover_eyebrow: "Recovery",
       recover_title: "Recover your license",
-      recover_copy: "Enter the email used for purchase. If a license exists for it, we will send it now.",
+      recover_copy: "Enter the email used for purchase. If a license exists for it, we will send a secure recovery link.",
       recover_email_label: "Purchase email",
-      recover_submit: "Send license by email",
+      recover_submit: "Send recovery link",
       recover_submit_loading: "Sending...",
       recover_hint: "Use the same email registered on Kiwify.",
-      recover_success: "If a license exists for this email, we have just sent it.",
-      recover_error: "Could not send your license right now.",
-      recover_missing_api: "Email recovery has not been configured yet.",
-      support_hint: supportEmail ? `If this persists, contact ${supportEmail}.` : "If this persists, contact support.",
+      recover_success: "If a license exists for this email, we will send a recovery link.",
+      recover_error: "Could not send your link right now.",
+      recover_missing_api: "Recovery has not been configured yet.",
+      recover_loading: "Validating your link...",
+      recover_claim_hint: "Please wait while we validate your access.",
+      recover_claim_error: "This link is invalid or expired.",
+      recover_keys_label: "Licenses",
+      recover_copy_button: "Copy licenses",
+      recover_copy_success: "Licenses copied!",
+      redeem_download: "Download for Windows",
+      support_hint: supportEmail ? `If this persists, reply to ${supportEmail}.` : "If this persists, reply to the recovery email.",
     },
   };
 
@@ -53,10 +81,57 @@
     return browserLocale.toLowerCase().startsWith("en") ? "en-US" : "pt-BR";
   }
 
-  let currentLocale = getInitialLocale();
-
   function t(key) {
     return (translations[currentLocale] && translations[currentLocale][key]) || key;
+  }
+
+  function parseQuery() {
+    const params = new URLSearchParams(window.location.search);
+    return { token: params.get("token") || "" };
+  }
+
+  function setStatusPending() {
+    if (!statusIcon) return;
+    statusIcon.className = "redeem-spinner";
+    statusIcon.textContent = "";
+  }
+
+  function setStatusComplete() {
+    if (!statusIcon) return;
+    statusIcon.className = "redeem-status-check";
+    statusIcon.textContent = "✅";
+  }
+
+  function setDownloadReady(downloadUrl) {
+    downloadButton.href = downloadUrl;
+    downloadButton.classList.remove("is-disabled");
+    downloadButton.removeAttribute("aria-disabled");
+  }
+
+  function setDownloadDisabled() {
+    downloadButton.href = "#";
+    downloadButton.classList.add("is-disabled");
+    downloadButton.setAttribute("aria-disabled", "true");
+  }
+
+  function updateCopyButtonLabel() {
+    copyButton.textContent = copied ? t("recover_copy_success") : t("recover_copy_button");
+  }
+
+  function downloadLicenseTxt(licenseKeys) {
+    if (!Array.isArray(licenseKeys) || !licenseKeys.length || txtDownloaded) {
+      return;
+    }
+    const blob = new Blob([`${licenseKeys.join("\n")}\n`], { type: "text/plain;charset=utf-8" });
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = objectUrl;
+    anchor.download = "great-folder-licencas.txt";
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+    txtDownloaded = true;
   }
 
   function applyLocale() {
@@ -74,6 +149,7 @@
     localeButtons.forEach((button) => {
       button.classList.toggle("is-active", button.getAttribute("data-locale-button") === currentLocale);
     });
+    updateCopyButtonLabel();
   }
 
   async function postJson(path, payload) {
@@ -93,6 +169,45 @@
       throw new Error(detail || t("recover_error"));
     }
     return body;
+  }
+
+  function showClaimMode() {
+    requestState.hidden = true;
+    claimState.hidden = false;
+    resultPanel.hidden = true;
+    setStatusPending();
+    setDownloadDisabled();
+    copyButton.disabled = true;
+    copied = false;
+    updateCopyButtonLabel();
+    licenseKeysNode.textContent = PLACEHOLDER;
+  }
+
+  function showClaimResult(payload) {
+    const licenseKeys = Array.isArray(payload.license_keys) ? payload.license_keys : [];
+    licenseKeysNode.textContent = licenseKeys.join("\n") || PLACEHOLDER;
+    copyButton.disabled = !licenseKeys.length;
+    copied = false;
+    updateCopyButtonLabel();
+    setStatusComplete();
+    if (payload.download_url) {
+      setDownloadReady(String(payload.download_url));
+    }
+    resultPanel.hidden = false;
+    claimFeedback.textContent = "";
+    downloadLicenseTxt(licenseKeys);
+  }
+
+  async function claimRecoveryToken(token) {
+    showClaimMode();
+    loadingText.textContent = t("recover_loading");
+    try {
+      const payload = await postJson("/v1/licenses/recover/claim", { token });
+      showClaimResult(payload);
+    } catch (error) {
+      claimFeedback.textContent = `${error.message || t("recover_claim_error")} ${t("support_hint")}`.trim();
+      claimFeedback.classList.add("is-error");
+    }
   }
 
   form.addEventListener("submit", async (event) => {
@@ -118,6 +233,14 @@
     }
   });
 
+  copyButton.addEventListener("click", async () => {
+    const keys = String(licenseKeysNode.textContent || "").trim();
+    if (!keys || keys === PLACEHOLDER) return;
+    await navigator.clipboard.writeText(keys);
+    copied = true;
+    updateCopyButtonLabel();
+  });
+
   localeButtons.forEach((button) => {
     button.addEventListener("click", () => {
       const nextLocale = button.getAttribute("data-locale-button");
@@ -131,4 +254,8 @@
   });
 
   applyLocale();
+  const query = parseQuery();
+  if (query.token) {
+    claimRecoveryToken(query.token);
+  }
 })();

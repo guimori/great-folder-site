@@ -434,6 +434,14 @@ main {
   width: 100%;
 }
 
+.recover-result-panel {
+  margin-top: 18px;
+}
+
+#recover-license-keys {
+  white-space: pre-line;
+}
+
 .redeem-status-panel,
 .redeem-result {
   background: var(--panel-2);
@@ -523,6 +531,7 @@ main {
   opacity: 0.52;
 }
 
+.download-note.is-error,
 #redeem-feedback.is-error {
   color: #ff9b9b;
 }

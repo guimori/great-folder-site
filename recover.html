@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
@@ -18,21 +18,45 @@
         <p class="eyebrow" data-i18n="recover_eyebrow">Recuperação</p>
         <h1 data-i18n="recover_title">Recupere sua licença</h1>
         <p class="section-copy" data-i18n="recover_copy">
-          Digite o email usado na compra. Se existir uma licença vinculada a ele, nós enviaremos agora.
+          Digite o email usado na compra. Se existir uma licença vinculada a ele, nós enviaremos um link seguro de recuperação.
         </p>
       </div>
 
       <div class="recover-card">
-        <form id="recover-form" class="recover-form">
-          <label class="recover-field">
-            <span class="recover-label" data-i18n="recover_email_label">Email da compra</span>
-            <input id="recover-email" class="recover-input" type="email" autocomplete="email" required placeholder="voce@exemplo.com">
-          </label>
-          <button id="recover-submit" class="button button-primary recover-submit" type="submit" data-i18n="recover_submit">Enviar licença por email</button>
-        </form>
-        <p id="recover-feedback" class="download-note" data-i18n="recover_hint">
-          Use o mesmo email cadastrado na Kiwify.
-        </p>
+        <div id="recover-request-state">
+          <form id="recover-form" class="recover-form">
+            <label class="recover-field">
+              <span class="recover-label" data-i18n="recover_email_label">Email da compra</span>
+              <input id="recover-email" class="recover-input" type="email" autocomplete="email" required placeholder="voce@exemplo.com">
+            </label>
+            <button id="recover-submit" class="button button-primary recover-submit" type="submit" data-i18n="recover_submit">Enviar link de recuperação</button>
+          </form>
+          <p id="recover-feedback" class="download-note" data-i18n="recover_hint">
+            Use o mesmo email cadastrado na Kiwify.
+          </p>
+        </div>
+
+        <div id="recover-claim-state" hidden>
+          <div class="redeem-loading">
+            <span id="recover-status-icon" class="redeem-spinner" aria-hidden="true"></span>
+            <span id="recover-loading-text" data-i18n="recover_loading">Validando seu link...</span>
+          </div>
+          <p id="recover-claim-feedback" class="download-note" data-i18n="recover_claim_hint">
+            Aguarde alguns segundos enquanto validamos seu acesso.
+          </p>
+
+          <section id="recover-result" class="redeem-result recover-result-panel" hidden>
+            <div class="redeem-result-block">
+              <span class="redeem-result-label" data-i18n="recover_keys_label">Licenças</span>
+              <code id="recover-license-keys" class="redeem-license">-----------</code>
+            </div>
+
+            <div class="redeem-actions">
+              <a id="recover-download-button" class="button button-primary is-disabled" href="#" target="_blank" rel="noopener" aria-disabled="true" data-i18n="redeem_download">Baixar para Windows</a>
+              <button id="recover-copy-button" class="button button-secondary" type="button" data-i18n="recover_copy_button" disabled>Copiar licenças</button>
+            </div>
+          </section>
+        </div>
       </div>
     </section>
   </main>
