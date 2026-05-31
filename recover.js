@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
   const config = window.GREAT_FOLDER_SITE || {};
   const deliveryConfig = config.delivery || {};
   const apiBaseUrl = String(deliveryConfig.apiBaseUrl || "").trim().replace(/\/$/, "");
@@ -21,9 +21,6 @@
   const metaDescription = document.querySelector('meta[name="description"]');
 
   const PLACEHOLDER = "-----------";
-  let currentLocale = getInitialLocale();
-  let copied = false;
-  let txtDownloaded = false;
 
   const translations = {
     "pt-BR": {
@@ -71,6 +68,10 @@
       support_hint: supportEmail ? `If this persists, reply to ${supportEmail}.` : "If this persists, reply to the recovery email.",
     },
   };
+
+  let currentLocale = getInitialLocale();
+  let copied = false;
+  let txtDownloaded = false;
 
   function getInitialLocale() {
     const savedLocale = window.localStorage.getItem("great-folder-locale");
