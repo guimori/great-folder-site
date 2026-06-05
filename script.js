@@ -9,6 +9,9 @@
   const priceValue = document.querySelector("[data-price-value]");
   const localeButtons = document.querySelectorAll("[data-locale-button]");
   const metaDescription = document.querySelector('meta[name="description"]');
+  const revealTargets = document.querySelectorAll("[data-reveal]");
+  let revealArmed = false;
+  let lastScrollY = window.scrollY;
 
   const translations = {
     "pt-BR": {
@@ -16,7 +19,7 @@
       page_description: "Organize arquivos e pastas no Windows com poucos cliques.",
       hero_eyebrow: "Organização automática para Windows",
       hero_title: "Great Folder",
-      hero_copy: "Mantenha suas pastas organizadas com poucos cliques.",
+      hero_copy: "Mantenha suas pastas organizadas com poucos cliques. Pagamento único e é seu pra sempre.",
       cta_buy: "Comprar por R$ 29",
       cta_how_it_works: "Ver como funciona",
       cta_recover_license: "Perdi minha licença",
@@ -73,7 +76,7 @@
       page_description: "Organize files and folders on Windows in just a few clicks.",
       hero_eyebrow: "Automatic Windows organization",
       hero_title: "Great Folder",
-      hero_copy: "Organize Downloads, Desktop, and other folders in seconds. Sort by type, extension, or date and keep everything clean without doing it by hand.",
+      hero_copy: "Keep your folders organized in just a few clicks. One-time payment and it's yours forever.",
       cta_buy: "Buy now",
       cta_how_it_works: "See how it works",
       cta_recover_license: "I lost my license",
@@ -220,5 +223,62 @@
     });
   });
 
+  function elementIsFullyVisible(entry) {
+    const viewportHeight = entry.rootBounds ? entry.rootBounds.height : window.innerHeight;
+    return entry.intersectionRatio >= 1 && entry.boundingClientRect.height <= viewportHeight;
+  }
+
+  function setupRevealOnScroll() {
+    if (!revealTargets.length || !("IntersectionObserver" in window)) {
+      revealTargets.forEach((element) => {
+        element.classList.add("is-visible");
+      });
+      return;
+    }
+
+    document.body.classList.add("reveal-ready");
+    revealTargets.forEach((element, index) => {
+      element.style.setProperty("--reveal-delay", `${Math.min(index * 35, 180)}ms`);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!revealArmed) {
+            return;
+          }
+          if (!elementIsFullyVisible(entry)) {
+            return;
+          }
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      {
+        threshold: 1,
+      }
+    );
+
+    revealTargets.forEach((element) => {
+      observer.observe(element);
+    });
+
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (revealArmed) {
+          return;
+        }
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > lastScrollY && currentScrollY > 12) {
+          revealArmed = true;
+        }
+        lastScrollY = currentScrollY;
+      },
+      { passive: true }
+    );
+  }
+
   applyLocale();
+  setupRevealOnScroll();
 })();
