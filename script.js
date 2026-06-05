@@ -19,7 +19,7 @@
       page_description: "Organize arquivos e pastas no Windows com poucos cliques.",
       hero_eyebrow: "Organização automática para Windows",
       hero_title: "Great Folder",
-      hero_copy: "Mantenha suas pastas organizadas com poucos cliques. Pagamento único e é seu pra sempre.",
+      hero_copy: "Mantenha suas pastas organizadas com poucos cliques.\nPagamento único, e é seu pra sempre.",
       cta_buy: "Comprar por R$ 29",
       cta_how_it_works: "Ver como funciona",
       cta_recover_license: "Perdi minha licença",
