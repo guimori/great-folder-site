@@ -638,18 +638,32 @@ main {
   }
 
   .hero {
-    min-height: 600px;
-    padding: 20px 14px 28px;
+    min-height: auto;
+    padding: 0 0 28px;
+    background: none;
+    display: block;
+  }
+
+  .hero::before {
+    content: "";
+    display: block;
+    width: 100%;
+    aspect-ratio: 1536 / 550;
     background-image:
-      linear-gradient(180deg, rgba(7, 26, 39, 0.16), rgba(7, 26, 39, 0.88)),
-      linear-gradient(90deg, rgba(7, 26, 39, 0.94) 0%, rgba(7, 26, 39, 0.68) 38%, rgba(7, 26, 39, 0.26) 70%),
+      linear-gradient(180deg, rgba(7, 26, 39, 0.06), rgba(7, 26, 39, 0.22)),
       url("assets/hero.png");
-    background-position: 72% 18%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
   }
 
   .hero-content {
     max-width: none;
-    padding-top: 0;
+    padding: 18px 14px 0;
+  }
+
+  .hero-overlay {
+    display: none;
   }
 
   .section {
@@ -750,9 +764,11 @@ main {
 
 @media (max-width: 520px) {
   .hero {
-    min-height: 560px;
-    padding: 16px 12px 24px;
-    background-position: 76% 18%;
+    padding-bottom: 24px;
+  }
+
+  .hero::before {
+    background-position: center top;
   }
 
   .button {
