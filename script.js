@@ -76,7 +76,8 @@
       page_description: "Organize files and folders on Windows in just a few clicks.",
       hero_eyebrow: "Automatic Windows organization",
       hero_title: "Great Folder",
-      hero_copy: "Keep your folders organized in just a few clicks. One-time payment and it's yours forever.",
+      hero_copy: "Keep your folders organized in just a few clicks.
+One-time payment, and it's yours forever.",
       cta_buy: "Buy now",
       cta_how_it_works: "See how it works",
       cta_recover_license: "I lost my license",
