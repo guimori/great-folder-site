@@ -92,6 +92,26 @@
     return { token: params.get("token") || "" };
   }
 
+  function clearSensitiveQueryParams(paramNames) {
+    if (!window.history || typeof window.history.replaceState !== "function") {
+      return;
+    }
+    const nextUrl = new URL(window.location.href);
+    let changed = false;
+    paramNames.forEach((name) => {
+      if (nextUrl.searchParams.has(name)) {
+        nextUrl.searchParams.delete(name);
+        changed = true;
+      }
+    });
+    if (!changed) {
+      return;
+    }
+    const search = nextUrl.searchParams.toString();
+    const sanitizedUrl = `${nextUrl.pathname}${search ? `?${search}` : ""}${nextUrl.hash}`;
+    window.history.replaceState({}, document.title, sanitizedUrl);
+  }
+
   function setStatusPending() {
     if (!statusIcon) return;
     statusIcon.className = "redeem-spinner";
@@ -265,6 +285,7 @@
   applyLocale();
   const query = parseQuery();
   if (query.token) {
+    clearSensitiveQueryParams(["token"]);
     claimRecoveryToken(query.token);
   }
 })();

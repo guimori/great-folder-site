@@ -31,7 +31,7 @@
       redeem_copy_button: "Copiar chave",
       redeem_activation_hint: "Assim que a chave aparecer, abra o app e cole na tela de ativação.",
       lookup_missing_api: "A página de resgate ainda não foi conectada à API de entregas.",
-      lookup_missing_order: "Ainda não recebemos o número do pedido nesta página.",
+      lookup_missing_order: "Este link de resgate está inválido ou incompleto.",
       lookup_loading: "Gerando sua licença...",
       lookup_retry: "Estamos finalizando sua licença...",
       lookup_not_found: "Ainda não encontramos sua licença. Atualize a página em alguns instantes.",
@@ -54,7 +54,7 @@
       redeem_copy_button: "Copy key",
       redeem_activation_hint: "As soon as the key appears, open the app and paste it into the activation screen.",
       lookup_missing_api: "The redemption page is not connected to the delivery API yet.",
-      lookup_missing_order: "We did not receive the order number on this page yet.",
+      lookup_missing_order: "This claim link is invalid or incomplete.",
       lookup_loading: "Generating your license...",
       lookup_retry: "We are finishing your license...",
       lookup_not_found: "We still could not find your license. Refresh this page in a moment.",
@@ -190,14 +190,27 @@
     const params = new URLSearchParams(window.location.search);
     return {
       claimToken: params.get("claim_token") || params.get("claimToken") || "",
-      orderId:
-        params.get("order_id") ||
-        params.get("orderId") ||
-        params.get("order_code") ||
-        params.get("transaction_id") ||
-        params.get("sale_id") ||
-        "",
     };
+  }
+
+  function clearSensitiveQueryParams(paramNames) {
+    if (!window.history || typeof window.history.replaceState !== "function") {
+      return;
+    }
+    const nextUrl = new URL(window.location.href);
+    let changed = false;
+    paramNames.forEach((name) => {
+      if (nextUrl.searchParams.has(name)) {
+        nextUrl.searchParams.delete(name);
+        changed = true;
+      }
+    });
+    if (!changed) {
+      return;
+    }
+    const search = nextUrl.searchParams.toString();
+    const sanitizedUrl = `${nextUrl.pathname}${search ? `?${search}` : ""}${nextUrl.hash}`;
+    window.history.replaceState({}, document.title, sanitizedUrl);
   }
 
   async function postJson(path, payload) {
@@ -224,9 +237,6 @@
   async function lookupDelivery(query) {
     if (query.claimToken) {
       return postJson("/v1/deliveries/claim", { claim_token: query.claimToken });
-    }
-    if (query.orderId) {
-      return postJson("/v1/deliveries/lookup", { order_id: query.orderId });
     }
     throw new Error(t("lookup_missing_order"));
   }
@@ -262,7 +272,7 @@
     }
 
     const query = parseQuery();
-    orderCodeNode.textContent = query.orderId || PLACEHOLDER;
+    orderCodeNode.textContent = PLACEHOLDER;
     licenseKeyNode.textContent = PLACEHOLDER;
     copyButton.disabled = true;
     activationHint.hidden = true;
@@ -271,11 +281,13 @@
     updateCopyButtonLabel();
     setDownloadDisabled();
 
-    if (!query.claimToken && !query.orderId) {
+    if (!query.claimToken) {
       setLoading("lookup_missing_order");
       setFeedback(`${t("lookup_missing_order")} ${t("support_hint")}`.trim(), true);
       return;
     }
+
+    clearSensitiveQueryParams(["claim_token", "claimToken", "order_id", "orderId", "order_code", "transaction_id", "sale_id"]);
 
     for (let attempt = 0; attempt < POLL_MAX_ATTEMPTS; attempt += 1) {
       setLoading(attempt === 0 ? "lookup_loading" : "lookup_retry");
