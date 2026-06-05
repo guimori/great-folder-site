@@ -105,6 +105,10 @@ h1 {
   line-height: 0.98;
 }
 
+.hero-title-accent {
+  color: var(--primary);
+}
+
 .hero-copy,
 .section-copy,
 .download-card p,
