@@ -17,9 +17,9 @@
     "pt-BR": {
       page_title: "Great Folder",
       page_description: "Organize arquivos e pastas no Windows com poucos cliques.",
-      hero_eyebrow: "Organização automática para Windows",
+      hero_eyebrow: "Mantenha suas pastas organizadas com poucos cliques.",
       hero_title: "Great Folder",
-      hero_copy: "Mantenha suas pastas organizadas com poucos cliques.\nPagamento único, e é seu pra sempre.",
+      hero_copy: "Pagamento único, e é seu pra sempre.",
       cta_buy: "Comprar por R$ 29",
       cta_how_it_works: "Ver como funciona",
       cta_recover_license: "Perdi minha licença",
@@ -74,10 +74,9 @@
     "en-US": {
       page_title: "Great Folder",
       page_description: "Organize files and folders on Windows in just a few clicks.",
-      hero_eyebrow: "Automatic Windows organization",
+      hero_eyebrow: "Keep your folders organized in just a few clicks.",
       hero_title: "Great Folder",
-      hero_copy: "Keep your folders organized in just a few clicks.
-One-time payment, and it's yours forever.",
+      hero_copy: "One-time payment, and it's yours forever.",
       cta_buy: "Buy now",
       cta_how_it_works: "See how it works",
       cta_recover_license: "I lost my license",
