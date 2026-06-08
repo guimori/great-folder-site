@@ -1,0 +1,83 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Suporte | Great Folder</title>
+  <meta name="description" content="Relate um problema do Great Folder com detalhes para análise.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png?v=5">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico?v=5">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=5">
+  <link rel="stylesheet" href="styles.css">
+  <script src="site-config.js"></script>
+  <script src="support.js" defer></script>
+</head>
+<body>
+  <main class="redeem-page support-page">
+    <section class="redeem-shell support-shell">
+      <div class="redeem-header">
+        <p class="eyebrow" data-i18n="support_page_eyebrow">Suporte</p>
+        <h1 data-i18n="support_page_title">Relate um problema</h1>
+        <p class="section-copy" data-i18n="support_page_copy">Descreva o que aconteceu com o máximo de detalhe possível. Vamos preparar a mensagem para envio por email.</p>
+      </div>
+
+      <div class="support-form-card">
+        <form id="support-form" class="support-form">
+          <label class="recover-field">
+            <span class="recover-label" data-i18n="support_name_label">Seu nome</span>
+            <input id="support-name" class="recover-input" type="text" autocomplete="name" placeholder="Seu nome">
+          </label>
+
+          <label class="recover-field">
+            <span class="recover-label" data-i18n="support_email_label">Seu email</span>
+            <input id="support-email" class="recover-input" type="email" autocomplete="email" placeholder="voce@exemplo.com">
+          </label>
+
+          <label class="recover-field">
+            <span class="recover-label" data-i18n="support_version_label">Versão do app</span>
+            <input id="support-version" class="recover-input" type="text" placeholder="Ex.: 0.1.0">
+          </label>
+
+          <label class="recover-field">
+            <span class="recover-label" data-i18n="support_problem_label">Problema</span>
+            <input id="support-problem" class="recover-input" type="text" required placeholder="Ex.: automação mudou a pasta errada">
+          </label>
+
+          <label class="recover-field">
+            <span class="recover-label" data-i18n="support_steps_label">O que você estava fazendo?</span>
+            <textarea id="support-steps" class="recover-input support-textarea" required placeholder="Descreva o passo a passo do que você fez."></textarea>
+          </label>
+
+          <label class="recover-field">
+            <span class="recover-label" data-i18n="support_expected_label">O que você esperava?</span>
+            <textarea id="support-expected" class="recover-input support-textarea" placeholder="Descreva o resultado esperado."></textarea>
+          </label>
+
+          <label class="recover-field">
+            <span class="recover-label" data-i18n="support_actual_label">O que aconteceu de fato?</span>
+            <textarea id="support-actual" class="recover-input support-textarea" required placeholder="Descreva o erro, mensagem ou comportamento visto."></textarea>
+          </label>
+
+          <div class="support-actions-row">
+            <button id="support-submit" class="button button-primary" type="submit" data-i18n="support_submit">Abrir email de suporte</button>
+            <button id="support-copy" class="button button-secondary" type="button" data-i18n="support_copy">Copiar relato</button>
+          </div>
+        </form>
+
+        <p id="support-feedback" class="download-note" data-i18n="support_hint">Preencha os campos e abra o email com a mensagem pronta.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="locale-switcher" aria-label="Language selector">
+    <button class="locale-button" type="button" data-locale-button="pt-BR">
+      <span class="locale-flag" aria-hidden="true">BR</span>
+    </button>
+    <span class="locale-separator">&gt;</span>
+    <button class="locale-button" type="button" data-locale-button="en-US">
+      <span class="locale-flag" aria-hidden="true">US</span>
+    </button>
+  </div>
+</body>
+</html>

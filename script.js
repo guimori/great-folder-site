@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
   const config = window.GREAT_FOLDER_SITE || {};
   const kiwifyConfig = config.kiwify || {};
   const pricingConfig = config.pricing || {};
@@ -10,6 +10,7 @@
   const localeButtons = document.querySelectorAll("[data-locale-button]");
   const metaDescription = document.querySelector('meta[name="description"]');
   const revealTargets = document.querySelectorAll("[data-reveal]");
+  const faqTriggers = document.querySelectorAll(".faq-trigger");
   let revealArmed = false;
   let lastScrollY = window.scrollY;
 
@@ -22,9 +23,6 @@
       cta_buy: "Comprar por R$ 29",
       cta_how_it_works: "Ver como funciona",
       cta_recover_license: "Perdi minha licença",
-      hero_point_1: "Pagamento único",
-      hero_point_2: "Sem assinatura",
-      hero_point_3: "Com reversão",
       how_eyebrow: "Como funciona",
       how_title: "Organize sem complicar o Explorer",
       step_1_title: "Escolha a pasta",
@@ -62,11 +60,32 @@
       pricing_list_2: "use para sempre",
       pricing_list_3: "receba sua licença após a compra",
       price_label: "Você paga uma vez só",
-      price_note: "",
       download_eyebrow: "Download",
       download_title: "Baixe o Great Folder para Windows",
       download_copy: "Com sua licença, você baixa o instalador e usa o programa no seu PC.",
-      download_note: "",
+      faq_eyebrow: "FAQ",
+      faq_title: "Dúvidas frequentes antes e depois da compra",
+      faq_copy: "Respostas diretas para instalação, licença, automações, reversão e atualização.",
+      faq_q1: "O Great Folder funciona em qualquer PC Windows?",
+      faq_a1: "Ele foi feito para Windows. O ideal é usar uma versão atual do Windows com permissão normal de instalação por usuário.",
+      faq_q2: "Eu pago uma vez ou é assinatura?",
+      faq_a2: "É pagamento único. Você compra uma vez e a licença fica sua.",
+      faq_q3: "Se eu trocar de computador, perco minha licença?",
+      faq_a3: "Não. Você pode recuperar a licença e ativar novamente no PC novo seguindo o fluxo de recuperação.",
+      faq_q4: "Posso desfazer uma organização?",
+      faq_a4: "Sim. O app tem histórico e opções para reverter a última execução ou reverter toda a organização salva.",
+      faq_q5: "As automações organizam tudo sozinhas?",
+      faq_a5: "Sim. Depois de ativadas, elas monitoram a pasta e reorganizam os arquivos conforme a regra escolhida.",
+      faq_q6: "O programa envia meus arquivos para a internet?",
+      faq_a6: "Não. A organização dos seus arquivos acontece localmente no seu computador.",
+      faq_q7: "Como recebo atualizações?",
+      faq_a7: "O app pode verificar novas versões e atualizar por dentro das configurações, mantendo sua licença ativa.",
+      faq_q8: "E se eu tiver um problema ou bug?",
+      faq_a8: "Você pode abrir a página de suporte, escrever o problema com detalhes e enviar para análise.",
+      support_eyebrow: "Suporte",
+      support_title: "Encontrou um problema?",
+      support_copy: "Abra a página de suporte e descreva com calma o que aconteceu. Quanto mais detalhe, melhor para corrigir rápido.",
+      support_cta: "Relatar um problema",
       checkout_missing: "Checkout da Kiwify ainda não configurado. Preencha checkoutUrl em site-config.js.",
       checkout_ready: "",
     },
@@ -78,9 +97,6 @@
       cta_buy: "Buy now",
       cta_how_it_works: "See how it works",
       cta_recover_license: "I lost my license",
-      hero_point_1: "One-time payment",
-      hero_point_2: "No subscription",
-      hero_point_3: "Undo included",
       how_eyebrow: "How it works",
       how_title: "Organize without fighting Explorer",
       step_1_title: "Pick a folder",
@@ -118,11 +134,32 @@
       pricing_list_2: "use it forever",
       pricing_list_3: "get your license after purchase",
       price_label: "You only pay once",
-      price_note: "",
       download_eyebrow: "Download",
       download_title: "Download Great Folder for Windows",
       download_copy: "With your license, you download the installer and use the program on your PC.",
-      download_note: "",
+      faq_eyebrow: "FAQ",
+      faq_title: "Common questions before and after purchase",
+      faq_copy: "Straight answers about installation, license, automations, undo, and updates.",
+      faq_q1: "Does Great Folder work on any Windows PC?",
+      faq_a1: "It was built for Windows. The ideal scenario is a current Windows version with normal per-user install permission.",
+      faq_q2: "Is it a one-time payment or a subscription?",
+      faq_a2: "It is a one-time payment. You buy it once and keep the license.",
+      faq_q3: "If I change computers, do I lose my license?",
+      faq_a3: "No. You can recover the license and activate it again on the new PC through the recovery flow.",
+      faq_q4: "Can I undo an organization?",
+      faq_a4: "Yes. The app has history and options to undo the last run or undo the whole saved organization.",
+      faq_q5: "Do automations organize everything by themselves?",
+      faq_a5: "Yes. Once enabled, they monitor the folder and reorganize files using the selected rule.",
+      faq_q6: "Does the program send my files to the internet?",
+      faq_a6: "No. Your file organization happens locally on your computer.",
+      faq_q7: "How do I receive updates?",
+      faq_a7: "The app can check for new versions and update from settings while keeping your license active.",
+      faq_q8: "What if I find a problem or bug?",
+      faq_a8: "You can open the support page, describe the issue in detail, and send it for review.",
+      support_eyebrow: "Support",
+      support_title: "Found a problem?",
+      support_copy: "Open the support page and describe what happened. The more detail you provide, the faster it is to fix.",
+      support_cta: "Report a problem",
       checkout_missing: "Kiwify checkout is not configured yet. Fill in checkoutUrl in site-config.js.",
       checkout_ready: "",
     },
@@ -194,6 +231,40 @@
     }
 
     setStatus(translate("checkout_ready"));
+  }
+
+  function setupFaqAccordion() {
+    if (!faqTriggers.length) {
+      return;
+    }
+
+    faqTriggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        const item = trigger.closest(".faq-item");
+        const panel = item ? item.querySelector(".faq-panel") : null;
+        const isExpanded = trigger.getAttribute("aria-expanded") === "true";
+
+        faqTriggers.forEach((otherTrigger) => {
+          otherTrigger.setAttribute("aria-expanded", "false");
+          const otherItem = otherTrigger.closest(".faq-item");
+          const otherPanel = otherItem ? otherItem.querySelector(".faq-panel") : null;
+          if (otherItem) {
+            otherItem.classList.remove("is-open");
+          }
+          if (otherPanel) {
+            otherPanel.hidden = true;
+          }
+        });
+
+        if (isExpanded || !item || !panel) {
+          return;
+        }
+
+        trigger.setAttribute("aria-expanded", "true");
+        item.classList.add("is-open");
+        panel.hidden = false;
+      });
+    });
   }
 
   localeButtons.forEach((button) => {
@@ -278,5 +349,6 @@
   }
 
   applyLocale();
+  setupFaqAccordion();
   setupRevealOnScroll();
 })();

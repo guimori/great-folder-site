@@ -807,3 +807,139 @@ main {
     border-radius: 14px;
   }
 }
+
+.faq-list {
+  display: grid;
+  gap: 12px;
+}
+
+.faq-item {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.faq-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: 600 1rem "Segoe UI", Arial, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+.faq-trigger:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.faq-icon {
+  flex: 0 0 auto;
+  color: var(--accent);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.faq-item.is-open .faq-icon {
+  transform: rotate(45deg);
+}
+
+.faq-panel {
+  padding: 0 20px 18px;
+}
+
+.faq-panel p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.support-card,
+.support-form-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+  gap: 20px;
+  align-items: center;
+  padding: 24px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.support-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.support-button {
+  min-width: 220px;
+}
+
+.support-page {
+  align-items: flex-start;
+}
+
+.support-shell {
+  width: min(920px, 100%);
+}
+
+.support-form-card {
+  grid-template-columns: 1fr;
+}
+
+.support-form {
+  display: grid;
+  gap: 16px;
+}
+
+.support-textarea {
+  min-height: 128px;
+  padding: 14px;
+  resize: vertical;
+}
+
+.support-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.support-actions-row .button {
+  min-width: 220px;
+}
+
+@media (max-width: 920px) {
+  .support-card,
+  .support-form-card {
+    grid-template-columns: 1fr;
+  }
+
+  .support-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 680px) {
+  .faq-trigger {
+    padding: 16px;
+    font-size: 0.98rem;
+  }
+
+  .faq-panel {
+    padding: 0 16px 16px;
+  }
+
+  .support-actions-row .button,
+  .support-button {
+    width: 100%;
+    min-width: 0;
+  }
+}
