@@ -81,6 +81,7 @@
   let currentLocale = getInitialLocale();
   let copySucceeded = false;
   let licenseTxtDownloaded = false;
+  let installerDownloadStarted = false;
 
   function t(key) {
     return (translations[currentLocale] && translations[currentLocale][key]) || key;
@@ -154,6 +155,23 @@
     anchor.remove();
     window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
     licenseTxtDownloaded = true;
+  }
+
+  function autoDownloadInstaller(downloadUrl) {
+    if (!downloadUrl || installerDownloadStarted) {
+      return;
+    }
+
+    const frame = document.createElement("iframe");
+    frame.hidden = true;
+    frame.setAttribute("aria-hidden", "true");
+    frame.src = downloadUrl;
+    document.body.appendChild(frame);
+    installerDownloadStarted = true;
+
+    window.setTimeout(() => {
+      frame.remove();
+    }, 60_000);
   }
 
   function setDownloadReady(downloadUrl) {
@@ -254,6 +272,7 @@
 
     if (downloadUrl) {
       setDownloadReady(downloadUrl);
+      autoDownloadInstaller(downloadUrl);
     } else {
       setDownloadDisabled();
     }
