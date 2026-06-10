@@ -308,6 +308,11 @@ main {
   line-height: 1.7;
 }
 
+.install-note {
+  margin-top: 14px;
+  color: var(--muted);
+}
+
 .pricing-panel {
   display: flex;
   flex-direction: column;
