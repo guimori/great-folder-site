@@ -180,6 +180,31 @@
     downloadButton.removeAttribute("aria-disabled");
   }
 
+  function resolveDownloadUrl(rawValue) {
+    const value = String(rawValue || "").trim();
+    if (!value) {
+      return fallbackDownloadUrl;
+    }
+
+    try {
+      const parsed = new URL(value, window.location.origin);
+      const hostname = parsed.hostname.toLowerCase();
+      const pathname = (parsed.pathname || "/").replace(/\/+$/, "") || "/";
+      const rootHosts = new Set([
+        "greatfolder.com",
+        "www.greatfolder.com",
+        window.location.hostname.toLowerCase(),
+      ]);
+      if (rootHosts.has(hostname) && (pathname === "/" || pathname === "/index.html")) {
+        return fallbackDownloadUrl || value;
+      }
+    } catch (_error) {
+      return value;
+    }
+
+    return value;
+  }
+
   function setDownloadDisabled() {
     downloadButton.href = "#";
     downloadButton.classList.add("is-disabled");
@@ -262,7 +287,7 @@
   function showDelivery(payload) {
     const orderId = String(payload.order_ref || payload.order_id || "").trim();
     const licenseKey = String(payload.license_key || "").trim();
-    const downloadUrl = String(payload.download_url || fallbackDownloadUrl || "").trim();
+    const downloadUrl = resolveDownloadUrl(payload.download_url);
 
     orderCodeNode.textContent = orderId || PLACEHOLDER;
     licenseKeyNode.textContent = licenseKey || PLACEHOLDER;

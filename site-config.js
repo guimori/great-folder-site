@@ -19,6 +19,6 @@ window.GREAT_FOLDER_SITE = {
   delivery: {
     apiBaseUrl: "https://great-folder.onrender.com",
     supportEmail: "guilhermegmori@gmail.com",
-    fallbackDownloadUrl: "",
+    fallbackDownloadUrl: "https://greatfolder.com/downloads/GreatFolder-Setup-0.1.1.exe",
   },
 };

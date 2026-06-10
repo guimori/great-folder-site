@@ -3,6 +3,7 @@
   const deliveryConfig = config.delivery || {};
   const apiBaseUrl = String(deliveryConfig.apiBaseUrl || "").trim().replace(/\/$/, "");
   const supportEmail = String(deliveryConfig.supportEmail || "").trim();
+  const fallbackDownloadUrl = String(deliveryConfig.fallbackDownloadUrl || "").trim();
 
   const form = document.getElementById("recover-form");
   const emailInput = document.getElementById("recover-email");
@@ -130,6 +131,31 @@
     downloadButton.removeAttribute("aria-disabled");
   }
 
+  function resolveDownloadUrl(rawValue) {
+    const value = String(rawValue || "").trim();
+    if (!value) {
+      return fallbackDownloadUrl;
+    }
+
+    try {
+      const parsed = new URL(value, window.location.origin);
+      const hostname = parsed.hostname.toLowerCase();
+      const pathname = (parsed.pathname || "/").replace(/\/+$/, "") || "/";
+      const rootHosts = new Set([
+        "greatfolder.com",
+        "www.greatfolder.com",
+        window.location.hostname.toLowerCase(),
+      ]);
+      if (rootHosts.has(hostname) && (pathname === "/" || pathname === "/index.html")) {
+        return fallbackDownloadUrl || value;
+      }
+    } catch (_error) {
+      return value;
+    }
+
+    return value;
+  }
+
   function setDownloadDisabled() {
     downloadButton.href = "#";
     downloadButton.classList.add("is-disabled");
@@ -215,8 +241,9 @@
     copied = false;
     updateCopyButtonLabel();
     setStatusComplete();
-    if (payload.download_url) {
-      setDownloadReady(String(payload.download_url));
+    const downloadUrl = resolveDownloadUrl(payload.download_url);
+    if (downloadUrl) {
+      setDownloadReady(downloadUrl);
     }
     resultPanel.hidden = false;
     claimFeedback.textContent = "";
